@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => ({
         target:
           mode === 'development'
             ? 'http://localhost:3000'
-            : 'https://be-ecommerce-isaac.vercel.app/',
+            : 'https://frevan-ecommerce-api.vercel.app/',
         changeOrigin: true,
       },
     },
