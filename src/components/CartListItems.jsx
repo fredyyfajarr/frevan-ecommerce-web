@@ -48,15 +48,11 @@ const CartListItems = ({ cartItem }) => {
     dispatch(removeItem({ cartId }));
     if (!user) return;
     try {
-      // Hapus dari backend dulu
-      await customAPI.delete(`/cart/${cartId}`);
-
-      // Hapus dari Redux setelah backend sukses
-      dispatch(removeCartItemFromBackend(cartId));
-      dispatch(fetchCartFromBackend()); // Ambil cart terbaru dari backend
+      await dispatch(removeCartItemFromBackend(cartId)).unwrap();
     } catch (error) {
       console.error('Error removing item:', error);
       toast.error('Failed to remove item');
+      dispatch(fetchCartFromBackend());
     }
   };
 

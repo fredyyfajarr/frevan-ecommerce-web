@@ -45,6 +45,18 @@ export const removeCartItemFromBackend = createAsyncThunk(
   }
 );
 
+export const clearCartFromBackend = createAsyncThunk(
+  'cart/clearCartFromBackend',
+  async (_, { rejectWithValue }) => {
+    try {
+      await customAPI.delete('/cart');
+      return null;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Error clearing cart');
+    }
+  }
+);
+
 const cartSlice = createSlice({
   name: 'cart',
   initialState: getCartFromLocalStorage(),
@@ -100,7 +112,10 @@ const cartSlice = createSlice({
     builder
       .addCase(fetchCartFromBackend.fulfilled, (state, action) => {
         const backendCart = action.payload;
-        if (!backendCart?.items) return;
+        if (!backendCart?.items) {
+          localStorage.removeItem('cart');
+          return defaultValue;
+        }
 
         state.userId = backendCart.user;
         state.CartItems = backendCart.items.map((item) => ({
@@ -135,6 +150,10 @@ const cartSlice = createSlice({
         );
 
         localStorage.setItem('cart', JSON.stringify(state));
+      })
+      .addCase(clearCartFromBackend.fulfilled, () => {
+        localStorage.removeItem('cart');
+        return defaultValue;
       });
   },
 });

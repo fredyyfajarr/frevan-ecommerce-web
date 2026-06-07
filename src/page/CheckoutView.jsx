@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import customAPI from '../api';
 import { toast } from 'react-toastify';
-import { clearCartItem } from '../features/cartSlice';
+import { clearCartFromBackend, clearCartItem } from '../features/cartSlice';
 import { redirect, useNavigate } from 'react-router-dom';
 
 const insertSnapScript = () => {
@@ -68,9 +68,13 @@ const CheckoutView = () => {
       // SnapToken acquired from previous step
       window.snap.pay(snapToken.token, {
         // Optional
-        onSuccess: function (result) {
+        onSuccess: async function (result) {
           console.log(result);
-          dispatch(clearCartItem());
+          try {
+            await dispatch(clearCartFromBackend()).unwrap();
+          } catch {
+            dispatch(clearCartItem());
+          }
           navigate('/order');
         },
         // Optional

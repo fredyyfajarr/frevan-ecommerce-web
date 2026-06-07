@@ -6,7 +6,7 @@ import customAPI from '../api';
 import { toast } from 'react-toastify';
 import { useRevalidator } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem } from '../features/cartSlice';
+import { addItem, fetchCartFromBackend, removeItem } from '../features/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../features/wishlistSlice';
 
 const CartProduct = ({ product, user, className }) => {
@@ -35,7 +35,9 @@ const CartProduct = ({ product, user, className }) => {
       await customAPI.post('/cart', {
         items: [{ product: product._id, quantity: 1, price: product.price }],
       });
+      dispatch(fetchCartFromBackend());
     } catch (error) {
+      dispatch(removeItem({ cartId: productCart.cartId }));
       console.error('Error saving to backend:', error);
       toast.error('Failed to save cart to backend');
     }
