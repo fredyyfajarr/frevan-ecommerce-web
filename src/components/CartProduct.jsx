@@ -9,10 +9,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addItem, fetchCartFromBackend, removeItem } from '../features/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../features/wishlistSlice';
 
-const CartProduct = ({ product, user, className }) => {
+const CartProduct = ({ product, user: userProp, className }) => {
   const { revalidate } = useRevalidator();
   const dispatch = useDispatch();
   const wishlist = useSelector((state) => state.wishlist.items);
+  const currentUser = useSelector((state) => state.userState.user);
+  const user = userProp ?? currentUser;
   const isInWishlist = wishlist.some((item) => item.productId === product._id);
 
   const handleAddToCart = async () => {
