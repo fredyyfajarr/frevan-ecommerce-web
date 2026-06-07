@@ -5,18 +5,17 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 
 export default [
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'node_modules'] },
+  js.configs.recommended,
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 'latest',
       globals: globals.browser,
       parserOptions: {
-        ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
         sourceType: 'module',
       },
-      extends: ['plugin:react/recommended'],
     },
     settings: { react: { version: '18.3' } },
     plugins: {
@@ -25,23 +24,23 @@ export default [
       'react-refresh': reactRefresh,
     },
     rules: {
-      ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/jsx-no-target-blank': 'off',
+      'react/prop-types': 'off',
+      'react/no-unescaped-entities': 'off',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
       ],
       'no-unused-vars': [
-        'error',
+        'warn',
         {
           vars: 'all',
           args: 'after-used',
           caughtErrors: 'all',
-          ignoreRestSiblings: false,
-          reportUsedIgnorePattern: false,
+          ignoreRestSiblings: true,
         },
       ],
     },

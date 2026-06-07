@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import CartListItems from './CartListItems';
 import { motion } from 'framer-motion';
 
 const CartList = () => {
   const carts = useSelector((state) => state.cartState?.CartItems ?? []);
-
-  useEffect(() => {}, [carts]);
 
   if (carts.length === 0) {
     return (

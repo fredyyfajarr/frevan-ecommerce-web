@@ -73,7 +73,7 @@ const EditPasswordView = () => {
             <div className="flex justify-end gap-4">
               <button
                 type="button"
-                onClick={() => navigate(`/profile/${user.name}`)}
+                onClick={() => navigate(`/profile/${id}`)}
                 className="btn btn-ghost"
               >
                 Cancel

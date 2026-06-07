@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { generateSelectAmount, priceFormat } from '../utils';
 import { FaTrash } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,15 +12,10 @@ import customAPI from '../api';
 import { toast } from 'react-toastify';
 
 const CartListItems = ({ cartItem }) => {
-  const { cartId, name, price, image, amount, stock, productId } = cartItem;
+  const { cartId, name, price, image, amount, stock } = cartItem;
   const user = useSelector((state) => state.userState.user);
 
   const dispatch = useDispatch();
-
-  // Fetch cart data dari backend saat komponen dimuat
-  useEffect(() => {
-    dispatch(fetchCartFromBackend());
-  }, [dispatch]);
 
   const handleAmount = async (e) => {
     const newQuantity = parseInt(e.target.value);

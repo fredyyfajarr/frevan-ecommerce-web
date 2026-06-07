@@ -17,10 +17,10 @@ const CartView = () => {
   const numItemInCart = useSelector((state) => state.cartState.numItemsInCart);
 
   useEffect(() => {
-    if (user) {
+    if (user?._id) {
       dispatch(fetchCartFromBackend()); // Ambil ulang cart dari backend setelah login
     }
-  }, [user, dispatch]);
+  }, [user?._id, dispatch]);
 
   const handleLoginClick = (e) => {
     e.preventDefault();

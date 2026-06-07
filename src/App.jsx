@@ -1,40 +1,32 @@
+import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { CartProvider } from './context/CartContext';
-
-// Component
-import AboutView from './page/AboutView';
-import CartView from './page/CartView';
-import HomeView from './page/HomeView';
-import OrderView from './page/OrderView';
-import ProductView from './page/ProductView';
 import PublicLayouts from './Layouts/PublicLayouts';
-import DetailProduct from './page/DetailProduct';
-import CheckoutView from './page/CheckoutView';
-import CreateProductView from './page/CreateProductView';
-import EditProductView from './page/EditProductView';
-import ProfileView from './page/ProfileView';
-import EditProfileView from './page/EditProfileView';
-import EditPasswordView from './page/EditPasswordView';
-import Wishlist from './page/Wishlist';
-
-// Loader
-import { loader as HomeLoader } from './page/HomeView';
-import { loader as ProductLoader } from './page/ProductView';
-import { loader as CheckoutLoader } from './page/CheckoutView';
-import { loader as OrderLoader } from './page/OrderView';
-import { loader as CreateProductLoader } from './page/CreateProductView';
-import { loader as EditProductLoader } from './page/EditProductView';
-import { loader as ProfileLoader } from './page/ProfileView';
-import { loader as EditProfileLoader } from './page/EditProfileView';
-import { loader as EditPasswordLoader } from './page/EditPasswordView';
-
-// Action
-
-// Storage
+import ErrorView from './page/ErrorView';
+import { fetchCartFromBackend } from './features/cartSlice';
 import { store } from './store';
 
-// Error Component
-import ErrorView from './page/ErrorView';
+const lazyPage = (importer) => async () => {
+  const module = await importer();
+  return {
+    Component: module.default,
+    loader: module.loader,
+  };
+};
+
+const lazyStorePage = (importer) => async () => {
+  const module = await importer();
+  return {
+    Component: module.default,
+    loader: module.loader?.(store),
+  };
+};
+
+const lazyComponent = (importer) => async () => {
+  const module = await importer();
+  return { Component: module.default };
+};
 
 const router = createBrowserRouter([
   {
@@ -44,82 +36,71 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomeView />,
-        loader: HomeLoader,
+        lazy: lazyPage(() => import('./page/HomeView')),
       },
       {
         path: 'products',
-        element: <ProductView />,
-        loader: ProductLoader,
+        lazy: lazyPage(() => import('./page/ProductView')),
       },
       {
         path: 'product/create',
-        element: <CreateProductView />,
-        loader: CreateProductLoader(store),
+        lazy: lazyStorePage(() => import('./page/CreateProductView')),
       },
       {
         path: 'product/:id/edit',
-        element: <EditProductView />,
-        loader: EditProductLoader(store),
+        lazy: lazyStorePage(() => import('./page/EditProductView')),
       },
       {
         path: 'product/:id',
-        element: <DetailProduct />,
+        lazy: lazyComponent(() => import('./page/DetailProduct')),
       },
       {
         path: 'order',
-        element: <OrderView />,
-        loader: OrderLoader(store),
+        lazy: lazyStorePage(() => import('./page/OrderView')),
       },
       {
         path: 'checkout',
-        element: <CheckoutView />,
-        loader: CheckoutLoader(store),
+        lazy: lazyStorePage(() => import('./page/CheckoutView')),
       },
       {
         path: 'carts',
-        element: <CartView />,
+        lazy: lazyComponent(() => import('./page/CartView')),
       },
       {
         path: 'abouts',
-        element: <AboutView />,
+        lazy: lazyComponent(() => import('./page/AboutView')),
       },
       {
         path: 'profile/:id',
-        element: <ProfileView />,
-        loader: ProfileLoader(store),
+        lazy: lazyStorePage(() => import('./page/ProfileView')),
       },
       {
         path: 'profile/:id/edit',
-        element: <EditProfileView />,
-        loader: EditProfileLoader(store),
+        lazy: lazyStorePage(() => import('./page/EditProfileView')),
       },
       {
         path: 'profile/:id/change-password',
-        element: <EditPasswordView />,
-        loader: EditPasswordLoader(store),
+        lazy: lazyStorePage(() => import('./page/EditPasswordView')),
       },
       {
-        path: '/wishlist',
-        element: <Wishlist />,
+        path: 'wishlist',
+        lazy: lazyComponent(() => import('./page/Wishlist')),
       },
     ],
   },
 ]);
 
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCartFromBackend } from './features/cartSlice';
-
 function App() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.userState.user); // Ambil user dari Redux
+  const user = useSelector((state) => state.userState.user);
 
   useEffect(() => {
-    if (user) {
-      dispatch(fetchCartFromBackend());
+    if (user?._id) {
+      dispatch(fetchCartFromBackend())
+        .unwrap()
+        .catch(() => {});
     }
-  }, [user, dispatch]); // Akan dipanggil saat user berubah
+  }, [user?._id, dispatch]);
 
   return (
     <CartProvider>
