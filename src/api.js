@@ -8,8 +8,17 @@ const customAPI = axios.create({
 customAPI.interceptors.request.use((config) => {
   try {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user?.token && !config.headers.Authorization) {
-      config.headers.Authorization = `Bearer ${user.token}`;
+    if (user?.token) {
+      const authValue = `Bearer ${user.token}`;
+
+      if (typeof config.headers?.set === 'function') {
+        config.headers.set('Authorization', authValue);
+      } else {
+        config.headers = {
+          ...config.headers,
+          Authorization: authValue,
+        };
+      }
     }
   } catch {
     localStorage.removeItem('user');
