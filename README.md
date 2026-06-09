@@ -1,4 +1,4 @@
-﻿# Frevan E-Commerce Web
+# Frevan E-Commerce Web
 
 The frontend web application for the Frevan E-Commerce platform.
 
@@ -13,4 +13,5 @@ The frontend web application for the Frevan E-Commerce platform.
 - Vite
 - Tailwind CSS
 
-Copyright build dari nama saya Fredy Fajar Adi Putra
+Copyright &copy; 2026 Fredy Fajar Adi Putra. All Rights Reserved.
+
