@@ -1,17 +1,16 @@
-# frevan-ecommerce-web
+﻿# Frevan E-Commerce Web
 
-## Brief Description
-frevan-ecommerce-web is a dynamic application project.
+The frontend web application for the Frevan E-Commerce platform.
 
 ## Key Features
-- Modern application architecture
-- Scalable and maintainable codebase
-- Seamless developer experience
+- Product browsing and search
+- Shopping cart management
+- User authentication and profiles
+- Responsive UI
 
 ## Tech Stack
 - React
-- Tailwind CSS
 - Vite
-- Node.js
+- Tailwind CSS
 
 Copyright build dari nama saya Fredy Fajar Adi Putra
